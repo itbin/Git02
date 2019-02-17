@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.itbin.mapper.UserMapper">
+<select id="login" parameterType="user" resultType="user">
+    select * from user where username = #{username} and password = #{password}
+</select>
+    <!--查询总数-->
+    <select id="findTotal" resultType="int">
+        select count(*) from user
+    </select>
+    <!--查询分页-->
+    <select id="findByPage" resultType="user">
+        select * from user limit #{start},#{rows}
+    </select>
+    <!--条件查询总数-->
+        <select id="findTotalCondition" parameterType="condition" resultType="int">
+            SELECT  count(*) from user
+            <where>
+                <if test="name != null and !''.equals(name) ">
+                    and name like '%${name}%'
+                </if>
+                <if test="address != null and !''.equals(address)">
+                    and   address like '%${address}%'
+                </if>
+                <if test="email != null and !''.equals(email) ">
+                    and  email like '%${email}%'
+                </if>
+            </where>
+    </select>
+    <!--条件分页查询-->
+    <select id="findByPageCondition" parameterType="condition" resultType="user" >
+        SELECT * from user
+        <where>
+            <if test="name != null and !''.equals(name)">
+                and name like '%${name}%'
+            </if>
+            <if test="address != null and !''.equals(address)">
+                and   address like '%${address}%'
+            </if>
+            <if test="email != null  and !''.equals(email)">
+                and email like '%${email}%'
+            </if>
+        </where>
+        limit #{start} , #{rows}
+    </select>
+    <!--添加-->
+    <insert id="saveUser" parameterType="user">
+        INSERT  into user (id,name,gender,age,address,qq,email,pic) VALUES (id,#{name},#{gender},#{age},#{address},#{qq},#{email},#{pic})
+    </insert>
+    <!--删除-->
+    <delete id="deleteUser" parameterType="int" >
+        DELETE from user where id = #{id}
+    </delete>
+    <!--查询用户 -->
+    <select id="findById" parameterType="int"  resultType="user">
+        select * from user where id = #{id}
+    </select>
+    <update id="update" parameterType="user" >
+        UPDATE  user set name=#{name} ,gender=#{gender},age=#{age},address=#{address},qq=#{qq},username=#{username},
+        password=#{password} where id = #{id}
+    </update>
+</mapper>
